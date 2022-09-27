@@ -12,7 +12,7 @@ public class Stack<T> implements IQueuable<T>{
         stack.add(value);
 //        return stack;
     }
-    public void add(T value){
+    public void push(T value){
         this.enqueue(value);
     }
 
