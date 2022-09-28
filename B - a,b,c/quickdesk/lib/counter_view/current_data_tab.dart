@@ -29,18 +29,15 @@ class _CurrentDataTabState extends State<CurrentDataTab> {
     late int nowServingVal = 0;
     late int lastNumberVal = 0;
 
-    late StreamSubscription _nowServing$;
-    late StreamSubscription _lastNum$;
     late final DatabaseReference nowServingdb;
     late final DatabaseReference lastNumberdb;
+    late StreamSubscription _nowServing$;
+    late StreamSubscription _lastNum$;
 
     _CurrentDataTabState({
         Key? key,
         this.onPressed,
-        // required this.nowServingVal,
-        // required this.lastNumberVal,
     });
-
 
     @override
     void initState() {

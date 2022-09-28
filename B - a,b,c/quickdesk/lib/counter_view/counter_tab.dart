@@ -95,7 +95,7 @@ class _CounterTabState extends State<CounterTab> {
     @override
     Widget build(BuildContext context) {
 
-        indicatorColor = counterOpen ? Color.fromARGB(255, 0, 235, 20) : Color.fromARGB(255, 255, 17, 0);
+        indicatorColor = counterOpen ? Color.fromARGB(255, 0, 235, 20) : Color.fromARGB(255, 194, 13, 0);
         tabColor = counterOpen ? backgroundColour : Colors.grey.shade500;
 
         return Expanded(
@@ -106,13 +106,13 @@ class _CounterTabState extends State<CounterTab> {
                     decoration: BoxDecoration(
                       color: tabColor,
                       borderRadius: BorderRadius.circular(10),
-                      boxShadow: [
-                          BoxShadow(
-                              color: Colors.black,
-                              offset: Offset.fromDirection(0),
-                              blurRadius: 10.0
-                          ),
-                      ]
+                      // boxShadow: [
+                      //     BoxShadow(
+                      //         color: Colors.black,
+                      //         offset: Offset.fromDirection(0),
+                      //         blurRadius: 2.0
+                      //     ),
+                      // ]
                     ),
                     child: Center(
                         child: Column(
@@ -135,23 +135,15 @@ class _CounterTabState extends State<CounterTab> {
                                                     decoration: BoxDecoration(
                                                         color: indicatorColor,
                                                         shape: BoxShape.circle,
-                                                        boxShadow: [
-
-                                                            BoxShadow(
-                                                                color: Colors.black,
-                                                                offset: Offset.fromDirection(0),
-                                                                blurRadius: 1.0
-                                                            ),
-
-
+                                                        boxShadow: counterOpen ? 
+                                                        [
                                                             BoxShadow(
                                                                 color: indicatorColor,
-                                                                offset: Offset.fromDirection(0),
-                                                                blurRadius: 20.0
+                                                                blurRadius: 20.0,
+                                                                spreadRadius: 1.0
                                                             ),
-
-
-                                                        ]
+                                                        ] 
+                                                        : null
                                                     ),
                                                 )
                                             )

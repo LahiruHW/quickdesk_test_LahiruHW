@@ -38,88 +38,94 @@ class _SelectorViewState extends State<SelectorView> {
 
                 children: [
 
-                        const Padding(
-                            padding: EdgeInsets.all(20.0),
-                            child: Center(
-                                child: Text(
-                                    "PLEASE SELECT YOUR ROLE",
-                                    style: TextStyle(
-                                        fontSize: 60,
-                                        fontWeight: FontWeight.w700,
-                                        letterSpacing: 2,
-                                    ),
-                                )
-                            ),
+                    const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Text(
+                            "This project was created using the Flutter Framework, with Dart & Firebase Realtime DB as the backend"
                         ),
+                    ),
 
-
-                        const Padding(
-                            padding: EdgeInsets.all(8.0),
-                            child: Center(
-                                child: Text(
-                                    "I am a: ",
-                                    style: TextStyle(
-                                        fontSize: 30
-                                    ),
-                                )
-                            ),
+                    const Padding(
+                        padding: EdgeInsets.all(20.0),
+                        child: Center(
+                            child: Text(
+                                "PLEASE SELECT YOUR ROLE",
+                                style: TextStyle(
+                                    fontSize: 60,
+                                    fontWeight: FontWeight.w700,
+                                    letterSpacing: 2,
+                                ),
+                            )
                         ),
+                    ),
 
-                        Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Center(
-                                child: SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                            Navigator.push(
-                                                context, 
-                                                MaterialPageRoute(
-                                                    builder: (context) => const CounterView() // jump to the Customer's View
-                                                )
-                                            );
-                                        },       
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Text(
-                                              "Customer",
-                                              style: TextStyle(
-                                                  fontSize: 30
-                                              ),
+                    const Padding(
+                        padding: EdgeInsets.all(8.0),
+                        child: Center(
+                            child: Text(
+                                "I am a: ",
+                                style: TextStyle(
+                                    fontSize: 30
+                                ),
+                            )
+                        ),
+                    ),
+
+                    Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Center(
+                            child: SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                        Navigator.push(
+                                            context, 
+                                            MaterialPageRoute(
+                                                builder: (context) => const CounterView() // jump to the Customer's View
+                                            )
+                                        );
+                                    },       
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Text(
+                                          "Customer",
+                                          style: TextStyle(
+                                              fontSize: 30
                                           ),
-                                        )
-                                    ),
-                                )
-                            ),
+                                      ),
+                                    )
+                                ),
+                            )
                         ),
+                    ),
 
-                        Padding(
-                            padding: const EdgeInsets.all(10.0),
-                            child: Center(
-                                child: SizedBox(
-                                    width: double.infinity,
-                                    child: ElevatedButton(
-                                        onPressed: () {
-                                            Navigator.push(
-                                                context, 
-                                                MaterialPageRoute(
-                                                    builder: (context) => const ManagementView() // jump to the Counter Manager's Page
-                                                )
-                                            );
-                                        },
-                                        child: const Padding(
-                                          padding: EdgeInsets.all(10.0),
-                                          child: Text(
-                                              "Counter Manager",
-                                              style: TextStyle(
-                                                  fontSize: 30
-                                              ),
+                    Padding(
+                        padding: const EdgeInsets.all(10.0),
+                        child: Center(
+                            child: SizedBox(
+                                width: double.infinity,
+                                child: ElevatedButton(
+                                    onPressed: () {
+                                        Navigator.push(
+                                            context, 
+                                            MaterialPageRoute(
+                                                builder: (context) => const ManagementView() // jump to the Counter Manager's Page
+                                            )
+                                        );
+                                    },
+                                    child: const Padding(
+                                      padding: EdgeInsets.all(10.0),
+                                      child: Text(
+                                          "Counter Manager",
+                                          style: TextStyle(
+                                              fontSize: 30
                                           ),
-                                        )
-                                    ),
-                                )
-                            ),
-                        )
+                                      ),
+                                    )
+                                ),
+                            )
+                        ),
+                    )
 
                 ]
 

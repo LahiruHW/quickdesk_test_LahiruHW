@@ -27,6 +27,8 @@ class _CounterViewState extends State<CounterView> {
     late final DatabaseReference qCounterRef;
     late final DatabaseReference qNumCounterRef;
     late final DatabaseReference lastNumRef;
+    late final DatabaseReference queueMainRef;
+    late final DatabaseReference nowServingRef;
     late StreamSubscription _qCounter$;
     late StreamSubscription _qNumCounterRef$;
 
@@ -44,7 +46,8 @@ class _CounterViewState extends State<CounterView> {
           qCounter += 1;
           qNumCounter += 1;
         }
-        _updateDBValues();
+        qCounterRef.set(qCounter);          // updates the values needed for generating ticket nums in the DB.
+        qNumCounterRef.set(qNumCounter);
         return num;
 
     }
@@ -65,7 +68,9 @@ class _CounterViewState extends State<CounterView> {
     void initState() {
         qCounterRef = FirebaseDatabase.instance.ref("qCount");
         qNumCounterRef = FirebaseDatabase.instance.ref("qNumCount");
+        nowServingRef = FirebaseDatabase.instance.ref("nowServing");
         lastNumRef = FirebaseDatabase.instance.ref("lastNum");
+        queueMainRef = FirebaseDatabase.instance.ref("queueMain");
         _activateListeners();
         super.initState();
     }
@@ -86,26 +91,38 @@ class _CounterViewState extends State<CounterView> {
             });
         });
 
+        // listen to the main queue to update the "nowServing" data
+        queueMainRef.onValue.listen((event) {
+            // get the current value of the queueMain[0], and put it in "nowServing"
+            queueMainRef.child("0").get().then((value) {
+                nowServingRef.set(value.value as int);
+            });
+        });
+
     }
 
-    void _updateDBValues() {
-        qCounterRef.set(qCounter);
-        qNumCounterRef.set(qNumCounter);
-    }
+    
 
     void addNewNumToQueue(int qNum, int newNum){
         
         // take the db ref for the particular queue (use qNum)
         DatabaseReference qRef = FirebaseDatabase.instance.ref("q$qNum"); //.push().set(1000);
-        DatabaseReference qRefCount = qRef.child("q${qNum}Count");
 
-        qRefCount.get().then((item) {
+        qRef.child("q${qNum}Count").get().then((item) {
             var pushVal = <String, dynamic>{    // create new object that is to be pushed
                 "${item.value}" : newNum
             };
             qRef.update(pushVal);               // add the value to the queue
-            qRefCount.set( (item.value as int) + 1);  // update the number of tickets in the queue
-            lastNumRef.set(newNum);
+            qRef.child("q${qNum}Count").set( (item.value as int) + 1);  // update the number of tickets in the queue
+            lastNumRef.set(newNum);     // make this the new "last Number" in the queue 
+        });
+
+        queueMainRef.child("length").get().then((item) {
+            var pushVal = <String, dynamic>{    // create new object that is to be pushed
+                "${item.value}" : newNum
+            };
+            queueMainRef.update(pushVal);
+            queueMainRef.child("length").set( (item.value as int) + 1 );
         });
 
     }

@@ -40,10 +40,6 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
     late StreamSubscription _qOnline$;
     bool counterOpen = true;
 
-    late int count;
-
-    String offlineBtnMsg = "GO OFFLINE";
-
     _CounterManagementTabState({
         Key? key,
         required this.counterNum,
@@ -55,15 +51,12 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
     void initState() {
         super.initState();
         dbQueueRef = FirebaseDatabase.instance.ref("q$counterNum");
-        count = 0;
-
-          _qOnline$ = dbQueueRef.child("online").onValue.listen((event) { 
+        // start the page with the online status of the counter given on the server
+        _qOnline$ = dbQueueRef.child("online").onValue.listen((event) { 
             setState(() {
                 counterOpen = event.snapshot.value as bool;
-                offlineBtnMsg = (counterOpen) ? "GO OFFLINE" : "GO ONLINE"; 
             });
         });
-
     }
 
     @override
@@ -77,15 +70,15 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
         counterOpen = !counterOpen;
         await dbQueueRef.child("online").set(counterOpen);
         // print("MGMT LOG ------- Counter $counterNum ${counterOpen ? "opened" : "closed"}");
-        setState(() {
-            offlineBtnMsg = (counterOpen) ? "GO OFFLINE" : "GO ONLINE";
-        });
+        setState(() {});
     }
 
     void completeCurrent() async {
                          
-        // how to deal ith obje
+        // take the current value at "0" in the current queue 
         
+
+
         print("COMPLETED CURRENT FROM QUEUE $counterNum");
 
     }
@@ -95,12 +88,6 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
 
         // ignore: avoid_print
         print("NEXT CALL FOR COUNTER $counterNum");
-
-
-        // remove the current child at "0"
-
-
-        // dbQueueRef.update({"0":'dwdwdwdwdwd' });
 
     }
 
@@ -135,7 +122,7 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
                                           onPressed: goOffline, 
 
                                           child: Text(
-                                              offlineBtnMsg,
+                                              (counterOpen) ? "GO OFFLINE" : "GO ONLINE", 
                                               style: const TextStyle(
                                                   fontSize: 30,
                                                   letterSpacing: 2,
