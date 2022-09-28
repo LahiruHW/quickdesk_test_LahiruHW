@@ -35,7 +35,6 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
     late Color openColor;
     final Color backgroundColor;
     late final DatabaseReference dbQueueRef;
-    late final DatabaseReference dbOnlineRef;
     late final DatabaseReference nowServingRef;
     late final DatabaseReference lastNumRef;
     late StreamSubscription _qOnline$;
@@ -55,13 +54,13 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
     @override
     void initState() {
         super.initState();
-        dbOnlineRef = FirebaseDatabase.instance.ref("q${counterNum}Online");
         dbQueueRef = FirebaseDatabase.instance.ref("q$counterNum");
         count = 0;
 
-        _qOnline$ = dbOnlineRef.onValue.listen((event) { 
+          _qOnline$ = dbQueueRef.child("online").onValue.listen((event) { 
             setState(() {
                 counterOpen = event.snapshot.value as bool;
+                offlineBtnMsg = (counterOpen) ? "GO OFFLINE" : "GO ONLINE"; 
             });
         });
 
@@ -76,9 +75,8 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
 
     void goOffline() async {
         counterOpen = !counterOpen;
-        await dbOnlineRef.set(counterOpen);          
-        // ignore: avoid_print
-        print("MGMT LOG ------- Counter $counterNum ${counterOpen ? "opened" : "closed"}");
+        await dbQueueRef.child("online").set(counterOpen);
+        // print("MGMT LOG ------- Counter $counterNum ${counterOpen ? "opened" : "closed"}");
         setState(() {
             offlineBtnMsg = (counterOpen) ? "GO OFFLINE" : "GO ONLINE";
         });
@@ -86,14 +84,7 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
 
     void completeCurrent() async {
                          
-        // final snapshot = dbQueueRef.get();
-        // count  += 1;
-        // print(count);
-        // snapshot.then((value) => print(value.child("0")));
-        
-        // remove the current "0" object
-        // update the object values
-        // ignore: avoid_print    
+        // how to deal ith obje
         
         print("COMPLETED CURRENT FROM QUEUE $counterNum");
 
@@ -109,7 +100,7 @@ class _CounterManagementTabState extends State<CounterManagementTab> {
         // remove the current child at "0"
 
 
-        dbQueueRef.update({"0":'dwdwdwdwdwd' });
+        // dbQueueRef.update({"0":'dwdwdwdwdwd' });
 
     }
 

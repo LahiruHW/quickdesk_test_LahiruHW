@@ -1,8 +1,8 @@
+// ignore: file_names
 import 'package:flutter/material.dart';
 import 'package:quickdesk/counter_view/MAIN_counterView.dart';
 import 'package:quickdesk/management_view/MAIN_managementView.dart';
 
-import '../services/XXX_provider_data.dart';
 
 
 // ignore: must_be_immutable
@@ -24,14 +24,6 @@ class SelectorView extends StatefulWidget {
 class _SelectorViewState extends State<SelectorView> {
 
     _SelectorViewState();
-
-
-    late StateProvider provider;
-
-
-    // SET UP CONNECTION TO FIREBASE RT DATABASE HERE!
-    // final fb = FirebaseDatabase.instance;
-
 
     @override
     Widget build(BuildContext context) {
@@ -83,7 +75,7 @@ class _SelectorViewState extends State<SelectorView> {
                                             Navigator.push(
                                                 context, 
                                                 MaterialPageRoute(
-                                                    builder: (context) => const CounterView()
+                                                    builder: (context) => const CounterView() // jump to the Customer's View
                                                 )
                                             );
                                         },       
@@ -111,7 +103,7 @@ class _SelectorViewState extends State<SelectorView> {
                                             Navigator.push(
                                                 context, 
                                                 MaterialPageRoute(
-                                                    builder: (context) => const ManagementView()
+                                                    builder: (context) => const ManagementView() // jump to the Counter Manager's Page
                                                 )
                                             );
                                         },

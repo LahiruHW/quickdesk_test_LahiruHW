@@ -1,4 +1,7 @@
 // ignore: file_names
+import 'dart:async';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:quickdesk/counter_view/alertdialog.dart';
 import 'counter_tab.dart';
@@ -17,12 +20,41 @@ class CounterView extends StatefulWidget {
 
 class _CounterViewState extends State<CounterView> {
 
+    int qCounter = 1;   // take (qCounter % 5) only if (qCounter % 5 != 0) ---> if (qCounter % 5 != 0) then qCounter += 1
+    int qNumCounter = 1;    // (qCounter * 100) + (qNumCounter)
 
-    Future openDialog() {
-        return showDialog(
+    
+    late final DatabaseReference qCounterRef;
+    late final DatabaseReference qNumCounterRef;
+    late final DatabaseReference lastNumRef;
+    late StreamSubscription _qCounter$;
+    late StreamSubscription _qNumCounterRef$;
+
+    
+    int getNewQueueNum(){
+        int num;
+        // print("$qCounter , $qNumCounter");
+        if (qCounter % 5 != 0){
+            num = ((qCounter % 5) * 100) + (qNumCounter % 100);
+        }else{
+            num = (((qCounter+1) % 5) * 100) + (qNumCounter % 100);
+        }
+        qCounter += 1;
+        if (qCounter % 5 == 0){
+          qCounter += 1;
+          qNumCounter += 1;
+        }
+        _updateDBValues();
+        return num;
+
+    }
+
+
+    void openDialog(int num) async {
+        showDialog(
             context: context, 
             builder: (context) {
-              return AlertBox(ticketNo: 123,);
+              return AlertBox(ticketNo: num);
             },
             barrierDismissible: true
         );
@@ -31,8 +63,61 @@ class _CounterViewState extends State<CounterView> {
 
     @override
     void initState() {
+        qCounterRef = FirebaseDatabase.instance.ref("qCount");
+        qNumCounterRef = FirebaseDatabase.instance.ref("qNumCount");
+        lastNumRef = FirebaseDatabase.instance.ref("lastNum");
+        _activateListeners();
         super.initState();
     }
+
+
+    // only used in the initState() method
+    void _activateListeners(){
+
+        _qCounter$ = qCounterRef.onValue.listen((event) { 
+            setState(() {
+                qCounter = event.snapshot.value as int;
+            });
+        });
+
+        _qNumCounterRef$ = qNumCounterRef.onValue.listen((event) { 
+            setState(() {
+                qNumCounter = event.snapshot.value as int;
+            });
+        });
+
+    }
+
+    void _updateDBValues() {
+        qCounterRef.set(qCounter);
+        qNumCounterRef.set(qNumCounter);
+    }
+
+    void addNewNumToQueue(int qNum, int newNum){
+        
+        // take the db ref for the particular queue (use qNum)
+        DatabaseReference qRef = FirebaseDatabase.instance.ref("q$qNum"); //.push().set(1000);
+        DatabaseReference qRefCount = qRef.child("q${qNum}Count");
+
+        qRefCount.get().then((item) {
+            var pushVal = <String, dynamic>{    // create new object that is to be pushed
+                "${item.value}" : newNum
+            };
+            qRef.update(pushVal);               // add the value to the queue
+            qRefCount.set( (item.value as int) + 1);  // update the number of tickets in the queue
+            lastNumRef.set(newNum);
+        });
+
+    }
+
+    @override
+    void deactivate() {
+        _qCounter$.cancel();
+        _qNumCounterRef$.cancel();
+        super.deactivate();    
+    }
+
+
 
     @override
     Widget build(BuildContext context) {
@@ -72,7 +157,12 @@ class _CounterViewState extends State<CounterView> {
       
       
                     CurrentDataTab(
-                        onPressed: () => openDialog(),//print("TOOK A NEW NUMBER"),        // GENERATE ALERT DIALOGUE HERE
+                        onPressed: () {
+                            int num = getNewQueueNum();
+                            openDialog(num);
+                            int tempQNum = (num / 100).truncate(); // get the queue number of the ticket                            
+                            addNewNumToQueue(tempQNum, num);    // push the new number to the appropriate queue
+                        },
                     ),
       
       

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:quickdesk/management_view/management_couter_tab.dart';
-
-import '../services/XXX_provider_data.dart';
+import 'package:quickdesk/management_view/management_counter_tab.dart';
 
 
 // ignore: must_be_immutable

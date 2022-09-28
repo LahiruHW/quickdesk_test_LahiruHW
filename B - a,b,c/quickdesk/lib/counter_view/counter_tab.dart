@@ -1,28 +1,21 @@
 // ignore_for_file: prefer_const_constructors
-
 import 'dart:async';
-
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 
 // ignore: must_be_immutable
 class CounterTab extends StatefulWidget {
 
-
     Color backgroundColour;
     final bool counterOpen;
     final int counterNum;
-    // final int queueNum;
-
 
     CounterTab({
         Key? key,
         required this.counterOpen,
         required this.backgroundColour, 
-        required this.counterNum, 
-        // required this.queueNum,
+        required this.counterNum,
     }) : super(key: key);
-
 
     @override
     // ignore: no_logic_in_create_state
@@ -31,9 +24,7 @@ class CounterTab extends StatefulWidget {
         backgroundColour: backgroundColour,
         counterNum: counterNum,
         counterOpen: counterOpen,
-        // queueNum: queueNum
     );
-
 
 }
 
@@ -46,15 +37,13 @@ class _CounterTabState extends State<CounterTab> {
 
     late Color indicatorColor;
     late Color tabColor;
-    late final DatabaseReference dbOnlineRef;
     late final DatabaseReference dbQueueRef;
 
     _CounterTabState({
         Key? key,
         required this.counterOpen,
         required this.backgroundColour, 
-        required this.counterNum, 
-        // required this.queueNum,  
+        required this.counterNum,  
     });
 
     late StreamSubscription _q$;
@@ -64,7 +53,6 @@ class _CounterTabState extends State<CounterTab> {
     @override
     void initState() {
         super.initState();
-        dbOnlineRef = FirebaseDatabase.instance.ref("q${counterNum}Online");
         dbQueueRef = FirebaseDatabase.instance.ref("q$counterNum");
         _activateListeners();
 
@@ -73,15 +61,21 @@ class _CounterTabState extends State<CounterTab> {
 
     void _activateListeners(){
 
+
         // listen to changes in the first number of the queue
         _q$ = dbQueueRef.child("0").onValue.listen((event) {
-            setState(() {
-                queueNum = event.snapshot.value as int;
-            });
+            if (event.snapshot.exists){
+              setState(() {
+                  queueNum = event.snapshot.value as int;
+              });
+            }
+            else{
+              setState(() => queueNum = 0);
+            }
         });
 
         // listen to the online status of the counter
-        _qOnline$ = dbOnlineRef.onValue.listen((event) {
+          _qOnline$ = dbQueueRef.child("online").onValue.listen((event) {
             setState(() {
                 counterOpen = event.snapshot.value as bool;
             });  
@@ -103,8 +97,6 @@ class _CounterTabState extends State<CounterTab> {
 
         indicatorColor = counterOpen ? Color.fromARGB(255, 0, 235, 20) : Color.fromARGB(255, 255, 17, 0);
         tabColor = counterOpen ? backgroundColour : Colors.grey.shade500;
-
-        // FirebaseServices.getQueue(counterNum);
 
         return Expanded(
             flex: 1,

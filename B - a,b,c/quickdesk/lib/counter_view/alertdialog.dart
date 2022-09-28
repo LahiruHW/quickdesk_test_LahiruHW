@@ -1,6 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/src/foundation/key.dart';
-import 'package:flutter/src/widgets/framework.dart';
 
 class AlertBox extends StatelessWidget {
 
@@ -16,11 +14,11 @@ class AlertBox extends StatelessWidget {
 
         return AlertDialog(
             title: const Text("NEW TICKET ISSUED"),
-            titleTextStyle: TextStyle(
+            titleTextStyle: const TextStyle(
                 fontSize: 40,
                 letterSpacing: 2
             ),
-            contentPadding: EdgeInsets.all(30),
+            contentPadding: const EdgeInsets.all(30),
             content: Text("Your ticket number is: $ticketNo"),
             actions: [
                 TextButton(
